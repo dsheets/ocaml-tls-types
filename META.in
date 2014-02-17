@@ -1,0 +1,5 @@
+version = "0.1.0"
+description = "common SSL/TLS types and interfaces"
+archive(byte) = "tls_types.cma"
+archive(native) = "tls_types.cmxa"
+exists_if = "tls_types.cma"
