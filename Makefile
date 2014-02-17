@@ -7,7 +7,6 @@ FLAGS=-package ctypes.foreign
 EXTRA_META=requires = \"ctypes.foreign\"
 
 build:
-	mkdir -p $(BUILD)
 	ocamlbuild -use-ocamlfind -I $(SRC) $(FLAGS) tls_types.cma
 	ocamlbuild -use-ocamlfind -I $(SRC) $(FLAGS) tls_types.cmxa
 
