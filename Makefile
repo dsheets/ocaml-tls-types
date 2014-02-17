@@ -3,15 +3,13 @@
 FINDLIB_NAME=tls-types
 BUILD=_build/lib
 SRC=lib
-FLAGS=-package ctypes
-EXTRA_META=requires = \"ctypes\"
+FLAGS=-package ctypes.foreign
+EXTRA_META=requires = \"ctypes.foreign\"
 
 build:
 	mkdir -p $(BUILD)
-	ocamlfind ocamlc -o $(BUILD)/tls_types.cmi -I $(BUILD) -I $(SRC) \
-		$(FLAGS) -c $(SRC)/tls_types.mli
-	ocamlfind ocamlmklib -o $(BUILD)/tls_types -I $(BUILD) \
-		$(FLAGS) $(SRC)/tls_types.mli
+	ocamlbuild -use-ocamlfind -I $(SRC) $(FLAGS) tls_types.cma
+	ocamlbuild -use-ocamlfind -I $(SRC) $(FLAGS) tls_types.cmxa
 
 META: META.in
 	cp META.in META
@@ -19,7 +17,7 @@ META: META.in
 
 install: META
 	ocamlfind install $(FINDLIB_NAME) META \
-		$(SRC)/tls_types.mli \
+		$(SRC)/tls_types.ml \
 		$(BUILD)/tls_types.cmi \
 		$(BUILD)/tls_types.cma \
 		$(BUILD)/tls_types.cmxa
@@ -30,5 +28,5 @@ uninstall:
 reinstall: uninstall install
 
 clean:
-	rm -rf _build
-	bash -c "rm -f META lib/{tls_types}.cm?"
+	ocamlbuild -clean
+	rm -f META

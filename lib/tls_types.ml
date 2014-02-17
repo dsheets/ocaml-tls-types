@@ -16,6 +16,13 @@
  *)
 
 open Ctypes
+open Foreign
+
+module Openssl_basic = struct
+  type verify_callback = int -> unit ptr -> int
+
+  let verify_callback = funptr (int @-> ptr void @-> returning int)
+end
 
 module type OPENSSL_BASIC = sig
 
@@ -31,6 +38,8 @@ module type OPENSSL_BASIC = sig
   val sslv3_client_method  : ssl_method
   val tlsv1_client_method  : ssl_method
 
+  include module type of Openssl_basic
+
   val ssl_library_init : unit -> int
   val ssl_load_error_strings : unit -> unit
   val ssl_ctx_new : ssl_method -> ssl_ctx
@@ -42,7 +51,6 @@ module type OPENSSL_BASIC = sig
   val ssl_ctx_set_default_verify_paths : ssl_ctx -> int
   val ssl_ctx_use_certificate_chain_file : ssl_ctx -> string -> int
   val ssl_ctx_ctrl : ssl_ctx -> int -> Signed.long -> unit ptr -> Signed.long
-  val verify_callback : (int -> unit ptr -> int) typ
   val ssl_ctx_set_verify : ssl_ctx -> int -> (int -> unit ptr -> int) -> unit
   val ssl_ctx_set_verify_depth : ssl_ctx -> int -> unit
   val ssl_ctx_load_verify_locations : ssl_ctx -> string -> string -> int
@@ -71,6 +79,5 @@ module type OPENSSL_BASIC = sig
   val ssl_get1_session : ssl -> ssl_session
   val ssl_set_session : ssl -> ssl_session -> int
   val ssl_session_free : ssl_session -> unit
-  val sslv23_method : unit -> unit
 
 end
