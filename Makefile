@@ -3,8 +3,8 @@
 FINDLIB_NAME=tls-types
 BUILD=_build/lib
 SRC=lib
-FLAGS=-package ctypes.foreign
-EXTRA_META=requires = \"ctypes.foreign\"
+FLAGS=-package ctypes
+EXTRA_META=requires = \"ctypes\"
 
 build:
 	ocamlbuild -use-ocamlfind -I $(SRC) $(FLAGS) tls_types.cma

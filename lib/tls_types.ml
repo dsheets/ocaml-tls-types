@@ -16,13 +16,6 @@
  *)
 
 open Ctypes
-open Foreign
-
-module Openssl_basic = struct
-  type verify_callback = int -> unit ptr -> int
-
-  let verify_callback = funptr (int @-> ptr void @-> returning int)
-end
 
 module type OPENSSL_BASIC = sig
 
@@ -31,14 +24,16 @@ module type OPENSSL_BASIC = sig
   type ssl
   type ssl_session
 
+  type verify_callback = int -> unit ptr -> int
+
+  val verify_callback : verify_callback typ
+
   val sslv23_server_method : ssl_method
   val sslv3_server_method  : ssl_method
   val tlsv1_server_method  : ssl_method
   val sslv23_client_method : ssl_method
   val sslv3_client_method  : ssl_method
   val tlsv1_client_method  : ssl_method
-
-  include module type of Openssl_basic
 
   val ssl_library_init : unit -> int
   val ssl_load_error_strings : unit -> unit
@@ -80,4 +75,13 @@ module type OPENSSL_BASIC = sig
   val ssl_set_session : ssl -> ssl_session -> int
   val ssl_session_free : ssl_session -> unit
 
+end
+
+module Bindings(F : sig val funptr : ('a -> 'b) fn -> ('a -> 'b) typ end) =
+struct
+  module Openssl_basic = struct
+    type verify_callback = int -> unit ptr -> int
+
+    let verify_callback = F.funptr (int @-> ptr void @-> returning int)
+  end
 end
