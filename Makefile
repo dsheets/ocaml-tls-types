@@ -18,6 +18,7 @@ install: META
 	ocamlfind install $(FINDLIB_NAME) META \
 		$(SRC)/tls_types.ml \
 		$(BUILD)/tls_types.cmi \
+		$(BUILD)/tls_types.a \
 		$(BUILD)/tls_types.cma \
 		$(BUILD)/tls_types.cmxa
 
